@@ -117,8 +117,15 @@
     }
 
     .buttons-container {
+    	display: flex;
+    	align-items: center;
+	    justify-content: center;
+	    gap: 0.5px;
+	    width: 100%;
+	    margin: auto;
+    
         /* display: flex; */
-        margin-bottom: 30px;
+       /*  margin-bottom: 30px;
         margin-right: 5px;
         color: #5cb85c;
         border: 1px solid #5cb85c;
@@ -126,7 +133,13 @@
         border-radius: 5px;
         width: 100px;
         height: 30px;
-        cursor: pointer;
+        cursor: pointer; */
+    }
+    
+    .buttons-container img{
+    	width: 120px; 
+   		height: 120px; 
+    	cursor: pointer;   	
     }
 
     .buttons-container button:hover {
@@ -157,15 +170,27 @@
     }
     
     .button-selected {
-	    background-color: #4CAF50; /* 선택된 버튼의 배경색 */
-	    color: white; /* 선택된 버튼의 글자색 */
+    	display: flex;
+    	align-items: center;
+	    justify-content: center; 
+	    gap: 0.5px;
+	    width: 100%;
+	    margin: auto;
+	   /* 	background-color: #4CAF50;
+	    color: white; 
 	    margin-bottom: 30px;
 	    margin-right: 5px;
         border: 1px solid #5cb85c;
         border-radius: 5px;
         width: 100px;
         height: 30px;
-        cursor: pointer;  
+        cursor: pointer; */
+	}
+	
+	.button-selected img{
+		width: 150px; 
+   		height: 150px; 
+    	cursor: pointer;
 	}
 	
 	.searchArea {
@@ -211,6 +236,16 @@
 	    justify-content: center; /* 내용을 중앙에 배치 */
 	    align-items: center; /* 항목들을 가운데 정렬 */
 	}
+	
+	.buttonArea {
+		display: flex;
+    	align-items: center;
+	    justify-content: center;
+	    gap: 0.5px;
+	    width: 70%;
+	    margin-left: 150px;
+	    margin-bottom: 100px;
+	}
 
 </style>
 <body>
@@ -228,15 +263,23 @@
 			</div>
 			
             <div class="control-wrapper">
-            	<button type="button" :class="[selected == '' ? 'button-selected' : 'buttons-container']" @click="fnList('')">전체</button>
+            	<div class="buttonArea">
+	            	<a :class="[selected == '' ? 'button-selected' : 'buttons-container']" @click="fnList('')"><img src="img/categories/cat-5.jpg"></a>
+	                <a :class="[selected == 'org' ? 'button-selected' : 'buttons-container']" @click="fnList('org')"><img src="img/categories/cat-1.jpg"></a>
+					<a :class="[selected == 'vegan' ? 'button-selected' : 'buttons-container']" @click="fnList('vegan')"><img src="img/categories/cat-2.jpg"></a>
+					<a :class="[selected == 'gluten' ? 'button-selected' : 'buttons-container']" @click="fnList('gluten')"><img src="img/categories/cat-3.jpg"></a>
+					<a :class="[selected == 'local' ? 'button-selected' : 'buttons-container']" @click="fnList('local')"><img src="img/categories/cat-4.jpg"></a>               	
+            	</div>
+            
+            	<!-- <button type="button" :class="[selected == '' ? 'button-selected' : 'buttons-container']" @click="fnList('')">전체</button>
                 <button type="button" :class="[selected == 'org' ? 'button-selected' : 'buttons-container']" @click="fnList('org')">유기농</button>
 				<button type="button" :class="[selected == 'vegan' ? 'button-selected' : 'buttons-container']" @click="fnList('vegan')">비건</button>
 				<button type="button" :class="[selected == 'gluten' ? 'button-selected' : 'buttons-container']" @click="fnList('gluten')">글루텐프리</button>
-				<button type="button" :class="[selected == 'local' ? 'button-selected' : 'buttons-container']" @click="fnList('local')">로컬푸드</button>
+				<button type="button" :class="[selected == 'local' ? 'button-selected' : 'buttons-container']" @click="fnList('local')">로컬푸드</button> -->
 
                 <div class="dropdown-container">
                     <!-- 드롭박스를 오른쪽에 배치 -->
-                    <template v-if="userType == 'A' ">
+                    <template v-if="userType == 'A' || userType == 'F'">
                     	<button @click="fnAdd">상품추가</button>
                     </template>
                     <select v-model="selectedOption" @change="updateSelected">
@@ -268,7 +311,7 @@
 			      	</div>
 			      	
 			      	<div class="admin-btn">
-			      		<template v-if="userType == 'A' ">
+			      		<template v-if="userType == 'A' || userType == 'F' ">
 				      		<button @click="fnRemove(item.itemNo)">상품삭제</button>
 				      		<button @click="fnEdit(item.itemNo)">상품수정</button>			      		
 			      		</template>
@@ -314,7 +357,8 @@ var app = new Vue({
             	code: code,
             	keyword : self.keyword,
             	type : self.type,
-            	order : self.order
+            	order : self.order,
+            	kind : 2
             };
             $.ajax({
                 url:"codeList.dox",

@@ -67,9 +67,9 @@
                             </thead>
                             <tbody>
                                 <tr v-for="(item, index) in list">
-                                    <td class="shoping__cart__item">
+                                    <td class="shoping__cart__item" >
                                         <img :src="item.filePath + item.fileName" alt="" style="width: 150px; height: 150px;">
-                                        <a href="#">{{item.itemName}}</a>
+                                        <a href="#" @click="fnMoveProductView(item.itemNo)">{{item.itemName}}</a>
                                         <h5></h5>
                                     </td>
                                     <td class="shoping__cart__price">
@@ -163,7 +163,7 @@
 	
 </div>
 	<!-- Js Plugins -->
-    <script src="../js/jquery-3.3.1.min.js"></script>
+    
     <script src="../js/bootstrap.min.js"></script>
     <script src="../js/jquery.nice-select.min.js"></script>
     <script src="../js/jquery-ui.min.js"></script>
@@ -179,6 +179,8 @@ var app = new Vue({
     el: '#app',
     data: {
     	userId : "${map.userId}",
+    	payKind : "${map.kind}",
+    	itemNo : "${map.itemNo}",
     	user: {},
         list : [],
         totalPay : 0,
@@ -193,7 +195,9 @@ var app = new Vue({
             var nparmap = {
             		userId : self.userId,
             		kind : 1,
-            		cartCheck : 1
+            		cartCheck : 1,
+            		payKind : self.payKind,
+            		itemNo : self.itemNo
             		
             };
             $.ajax({
@@ -226,8 +230,13 @@ var app = new Vue({
                 }
             });
         },
+        fnMoveProductView :function(itemNo){
+        	var self = this;
+        	$.pageChange("/productView.do", {itemNo : itemNo , userId : self.userId});
+        },
         fnProductList: function() {
-        	$.pageChange("/productList.do", {});
+        	var self = this;
+        	$.pageChange("/productList.do", {userId : self.userId});
         	},
         fnHome: function() {
         	location.href="main.do";
@@ -247,7 +256,11 @@ var app = new Vue({
     			var self = this
     			var noRatePay = 0;
     			for(var i = 0 ; i <self.list.length ; i++){
+    				if(self.list[i].cnt == 0){
+    					self.list[i].selectcnt = 0;
+    				}
     				noRatePay += self.list[i].price * self.list[i].selectcnt;
+    				
     			}
     			self.noRatePrice = noRatePay.toLocaleString('ko-KR');
     			var pay = 0;
@@ -271,6 +284,9 @@ var app = new Vue({
                 var self = this;
                if(self.list[index].cnt < num){
             	   num = self.list[index].cnt;
+               }
+               if(num <0){
+            	   num = 0;
                }
                
                 var nparmap = {
